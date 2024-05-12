@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cnpgcctwlueaj"]
+
+[node name="Origin" type="Node"]
+
+[node name="World" type="Node" parent="."]
+
+[node name="Avatars" type="Node" parent="."]
+
+[node name="Artifacts" type="Node" parent="."]
