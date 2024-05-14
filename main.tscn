@@ -2,7 +2,7 @@
 
 [node name="Origin" type="Node"]
 
-[node name="World" type="Node" parent="."]
+[node name="Worlds" type="Node" parent="."]
 
 [node name="Avatars" type="Node" parent="."]
 
