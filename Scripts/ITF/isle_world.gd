@@ -1,4 +1,4 @@
-class_name IsleWorld extends Node
+class_name IsleWorld extends Node3D
 
 @export var world_name: String
 @export var author: String
