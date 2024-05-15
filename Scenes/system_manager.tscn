@@ -1,15 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://d0pxbophbhnq4"]
+[gd_scene load_steps=3 format=3 uid="uid://d0pxbophbhnq4"]
 
 [ext_resource type="Script" path="res://Scripts/system_manager.gd" id="1_1jnsf"]
+[ext_resource type="PackedScene" uid="uid://01aijf03un1k" path="res://Scenes/base_ui.tscn" id="2_hp30n"]
 
 [node name="SystemManager" type="Node"]
 script = ExtResource("1_1jnsf")
 
-[node name="UIControl" type="Control" parent="."]
-visible = false
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="UIControl" parent="." instance=ExtResource("2_hp30n")]
