@@ -22,12 +22,12 @@ func _process(delta: float) -> void:
 func _physics_process(delta: float) -> void:
 	# Get parameters
 	var system_manager: _SystemManager = SystemManager
-	var acceleration: float = 30.0 * delta
-	var deacceleration: float = 40.0 * delta
-	var gravity: float = -9.8 * delta
-	var jump_speed: float = 2.5
-	var max_speed: float = 4.0
-	var max_falling_speed: float = 20.0
+	var acceleration: float = delta * system_manager.game_rules.user_acceleration
+	var deacceleration: float = delta * system_manager.game_rules.user_deacceleration
+	var gravity: float = delta * system_manager.game_rules.user_gravity.y
+	var jump_speed: float = system_manager.game_rules.user_jump_speed
+	var max_speed: float = system_manager.game_rules.user_max_velocity
+	var max_falling_speed: float = system_manager.game_rules.user_max_fall_speed
 	
 	# Input and horizontal speed receive
 	var movement_axis: Vector2 = __get_movement_axis() if !system_manager.ui_enabled else Vector2()
