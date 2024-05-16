@@ -1,9 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://d0pxbophbhnq4"]
+[gd_scene load_steps=6 format=3 uid="uid://d0pxbophbhnq4"]
 
 [ext_resource type="Script" path="res://Scripts/system_manager.gd" id="1_1jnsf"]
 [ext_resource type="PackedScene" uid="uid://01aijf03un1k" path="res://Scenes/base_ui.tscn" id="2_hp30n"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_14jky"]
+
+[sub_resource type="Sky" id="Sky_1t3qg"]
+sky_material = SubResource("ProceduralSkyMaterial_14jky")
+
+[sub_resource type="Environment" id="Environment_0nkui"]
+background_mode = 2
+sky = SubResource("Sky_1t3qg")
+ambient_light_source = 3
 
 [node name="SystemManager" type="Node"]
 script = ExtResource("1_1jnsf")
 
 [node name="UIControl" parent="." instance=ExtResource("2_hp30n")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0nkui")
