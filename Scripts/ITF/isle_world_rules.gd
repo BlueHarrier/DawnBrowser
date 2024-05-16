@@ -1,11 +1,11 @@
 class_name IsleWorldRules extends Resource
 
 @export var user_gravity: Vector3 = Vector3(0.0, -9.8, 0.0)
-@export var user_acceleration: float = 5.0
-@export var user_deacceleration: float = 10.0
-@export var user_max_velocity: float = 10.0
-@export var user_jump_speed: float = 15.0
-@export var user_max_fall_speed: float = 50.0
+@export var user_acceleration: float = 30.0
+@export var user_deacceleration: float = 40.0
+@export var user_max_velocity: float = 4.0
+@export var user_jump_speed: float = 2.5
+@export var user_max_fall_speed: float = 20.0
 @export var user_allow_velocity_scaling: bool = true
 @export var user_respawn_fall_distance: float = 30.0
 @export var user_spawn_policy: RespawnPolicy = RespawnPolicy.RANDOM
