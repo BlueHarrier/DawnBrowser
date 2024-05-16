@@ -3,10 +3,18 @@ class_name IsleWorld extends Node3D
 @export var world_name: String
 @export var author: String
 @export var version: String
-@export var tags: PackedStringArray
+@export var tags: PackedStringArray = []
 @export var rules: IsleWorldRules
 @export var physics: IsleWorldPhysics
 @export var environment: IsleWorldEnvironment
+
+func _ready() -> void:
+    if !rules:
+        rules = IsleWorldRules.new()
+    if !physics:
+        physics = IsleWorldPhysics.new()
+    if !environment:
+        environment = IsleWorldEnvironment.new()
 
 func from_json(json: Dictionary) -> Error:
     if json.has("name") and json["name"] is String:
