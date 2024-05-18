@@ -43,9 +43,3 @@ func _export_post(state: GLTFState) -> Error:
         scene["extensions"] = {}
     scene["extensions"]["ISLE_world"] = extension
     return OK
-
-func __reset_ownership(node: Node, owner: Node) -> void:
-    if node != owner:
-        node.owner = owner
-    for child in node.get_children():
-        __reset_ownership(child, owner)
