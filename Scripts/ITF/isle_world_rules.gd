@@ -70,3 +70,26 @@ func from_json(json: Dictionary) -> Error:
         for spawner: Array in json["userSpawners"]:
             user_spawners.push_back(Vector3(spawner[0], spawner[1], spawner[2]))
     return OK
+
+func to_json() -> Dictionary:
+    var json: Dictionary = {
+        "userGravity": [user_gravity.x, user_gravity.y, user_gravity.z],
+        "userAcceleration": user_acceleration,
+        "userDeceleration": user_deacceleration,
+        "userMaxVelocity": user_max_velocity,
+        "userJumpSpeed": user_jump_speed,
+        "userMaxFallSpeed": user_max_fall_speed,
+        "userAllowVelocityScaling": user_allow_velocity_scaling,
+        "userRespawnFallDistance": user_respawn_fall_distance,
+        "userSpawnPolicy": __spawn_policy_str(),
+        "userSpawners": []
+    }
+    for spawner: Vector3 in user_spawners:
+        json["userSpawners"].append([spawner.x, spawner.y, spawner.z])
+    return json
+
+func __spawn_policy_str() -> String:
+    match user_spawn_policy:
+        RespawnPolicy.RANDOM: return "RANDOM"
+        RespawnPolicy.ORDERED: return "ORDERED"
+        _: return "Unknown"

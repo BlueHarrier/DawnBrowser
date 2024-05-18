@@ -44,3 +44,18 @@ func from_json(json: Dictionary) -> Error:
     if json.has("environment"):
         if environment.from_json(json["environment"]) != OK: return ERR_PARSE_ERROR
     return OK
+
+func to_json() -> Dictionary:
+    var json: Dictionary = {
+        "name": world_name,
+        "author": author,
+        "version": version,
+        "tags": tags
+    }
+    if rules:
+        json["rules"] = rules.to_json()
+    if physics:
+        json["physics"] = physics.to_json()
+    if environment:
+        json["environment"] = environment.to_json()
+    return json

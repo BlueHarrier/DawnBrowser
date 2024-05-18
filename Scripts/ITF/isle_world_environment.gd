@@ -58,3 +58,23 @@ func from_json(json: Dictionary) -> Error:
             ambient_light_energy = json["ambientLightEnergy"]
         else: return ERR_PARSE_ERROR
     return OK
+
+func to_json() -> Dictionary:
+    var json: Dictionary = {
+        "cameraZNear": camera_z_near,
+        "cameraZFar": camera_z_far,
+        "fogEnabled": fog_enabled,
+        "fogStartDistance": fog_start_distance,
+        "fogEndDistance": fog_end_distance,
+        "fogColor": [fog_color.r, fog_color.g, fog_color.b],
+        "ambientLightSource": __ambient_light_source_str(),
+        "ambientLightColor": [ambient_light_color.r, ambient_light_color.g, ambient_light_color.b],
+        "ambientLightEnergy": ambient_light_energy
+    }
+    return json
+
+func __ambient_light_source_str() -> String:
+    match ambient_light_source:
+        AmbienLightSource.SKYBOX: return "SKYBOX"
+        AmbienLightSource.COLOR: return "COLOR"
+        _: return "Unknown"

@@ -20,3 +20,10 @@ func from_json(json: Dictionary) -> Error:
             wind_force = Vector3(arr[0], arr[1], arr[2])
         else: return ERR_PARSE_ERROR
     return OK
+
+func to_json() -> Dictionary:
+    return {
+        "gravity": [gravity.x, gravity.y, gravity.z],
+        "air_thickness": air_thickness,
+        "wind_force": [wind_force.x, wind_force.y, wind_force.z]
+    }
