@@ -1,3 +1,4 @@
+@tool
 class_name ITFDocument extends Resource
 
 var _default_world: int = -1
