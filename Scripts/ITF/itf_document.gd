@@ -23,16 +23,9 @@ func open(file_path: String) -> Error:
     else:
         _default_world = 0
     var root: Node3D = loader.generate_scene(state)
-    var children: Array[Node] = root.get_children()
-    for child in children:
-        root.remove_child(child)
-        child.owner = null
-        var scene: PackedScene = PackedScene.new()
-        scene.pack(child)
-        _world_list.append(scene)
-        _world_dict[child.get_name()] = scene
-        child.free()
-    root.free()
+    var packed_scene: PackedScene = PackedScene.new()
+    packed_scene.pack(root)
+    add_world(packed_scene, root.name)
     return OK
 
 func get_world_number() -> int:
