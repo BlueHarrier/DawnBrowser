@@ -5,7 +5,7 @@ func _load() -> void:
     var access_error: Error = file_access.get_error()
     if access_error != OK:
         file_error.emit(access_error)
-    size = file_access.get_len()
+    size = file_access.get_length()
     file_access.close()
     type = uri.get_extension().to_lower()
     name = uri.get_file()
