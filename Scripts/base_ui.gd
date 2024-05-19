@@ -14,7 +14,7 @@ func on_load_button_pressed() -> void:
     if path == "":
         return
     load_button.disabled = true
-    var file: AsyncFile = LocalFile.new(path)
+    var file: AsyncFile = AsyncFile.from_protocol(path)
     file.bind_signals(load_gltf, load_error)
     file.load()
 
