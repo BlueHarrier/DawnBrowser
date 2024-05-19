@@ -20,3 +20,13 @@ func load() -> void:
 func bind_signals(on_loaded: Callable, on_error: Callable) -> void:
     file_loaded.connect(on_loaded)
     file_error.connect(on_error)
+
+static func from_protocol(new_uri: String) -> AsyncFile:
+    var protocol: String = new_uri.substr(0, new_uri.find(":"))
+    match protocol:
+        "http", "https":
+            return HTTPFile.new(new_uri)
+        _:
+            if protocol == "file":
+                new_uri = new_uri.substr(7)
+            return LocalFile.new(new_uri)

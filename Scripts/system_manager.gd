@@ -57,3 +57,8 @@ func load_world(scene: PackedScene) -> void:
     get_world().add_child(new_world)
     game_rules = new_world.rules
     _UserController.transform.origin = Vector3(0, 0, 0)
+
+func create_http_request() -> HTTPRequest:
+    var request: HTTPRequest = HTTPRequest.new()
+    add_child(request)
+    return request
