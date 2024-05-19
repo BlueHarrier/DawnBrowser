@@ -60,5 +60,6 @@ func load_world(scene: PackedScene) -> void:
 
 func create_http_request() -> HTTPRequest:
     var request: HTTPRequest = HTTPRequest.new()
+    request.use_threads = true
     add_child(request)
     return request
