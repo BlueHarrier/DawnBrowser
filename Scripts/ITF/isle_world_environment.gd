@@ -1,3 +1,4 @@
+@tool
 class_name IsleWorldEnvironment extends Resource
 
 @export var camera_z_near: float = 0.1
@@ -25,7 +26,7 @@ func from_json(json: Dictionary) -> Error:
             camera_z_far = json["cameraZFar"]
         else: return ERR_PARSE_ERROR
     if json.has("fogEnabled"):
-        if json["fogEnabled"].is_bool():
+        if json["fogEnabled"] is bool:
             fog_enabled = json["fogEnabled"]
         else: return ERR_PARSE_ERROR
     if json.has("fogStartDistance"):
