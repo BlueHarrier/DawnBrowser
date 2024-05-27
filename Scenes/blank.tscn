@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3 uid="uid://nk46smou1ftv"]
+
+[ext_resource type="Material" uid="uid://dlc6udjr8u15r" path="res://Materials/Prototype/Dark1.tres" id="1_1col6"]
+[ext_resource type="Script" path="res://Scripts/ITF/isle_world.gd" id="1_21rr5"]
+[ext_resource type="Script" path="res://Scripts/ITF/isle_world_rules.gd" id="2_8axwr"]
+
+[sub_resource type="Resource" id="Resource_cc3n0"]
+script = ExtResource("2_8axwr")
+user_gravity = Vector3(0, -9.8, 0)
+user_acceleration = 0.0
+user_deacceleration = 10.0
+user_max_velocity = 0.0
+user_jump_speed = 15.0
+user_max_fall_speed = 50.0
+user_allow_velocity_scaling = true
+user_respawn_fall_distance = 30.0
+user_spawn_policy = 0
+user_spawners = [Vector3(0, 0, 0)]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_2x1i3"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_muxg8"]
+size = Vector2(100, 100)
+subdivide_width = 5
+subdivide_depth = 5
+
+[node name="Blank" type="Node3D"]
+script = ExtResource("1_21rr5")
+world_name = "Blank"
+author = "BlueHarrier"
+version = "1.0"
+rules = SubResource("Resource_cc3n0")
+
+[node name="Floor" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("WorldBoundaryShape3D_2x1i3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = ExtResource("1_1col6")
+mesh = SubResource("PlaneMesh_muxg8")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.707107, 0.5, -0.5, 0, 0.707107, 0.707107, 0.707107, -0.5, 0.5, 0, 0, 0)
