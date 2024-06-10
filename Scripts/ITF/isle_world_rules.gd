@@ -1,4 +1,3 @@
-@tool
 class_name IsleWorldRules extends Resource
 
 @export var user_gravity: Vector3 = Vector3(0.0, -9.8, 0.0)

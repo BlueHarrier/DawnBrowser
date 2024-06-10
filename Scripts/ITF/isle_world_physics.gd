@@ -1,4 +1,3 @@
-@tool
 class_name IsleWorldPhysics extends Resource
 
 @export var gravity: Vector3 = Vector3(0, -9.8, 0)

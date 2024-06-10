@@ -1,4 +1,3 @@
-@tool
 class_name IsleWorldEnvironment extends Resource
 
 @export var camera_z_near: float = 0.1

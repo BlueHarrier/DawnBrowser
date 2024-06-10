@@ -1,4 +1,3 @@
-@tool
 class_name IsleWorld extends Node3D
 
 @export var world_name: String
@@ -10,9 +9,6 @@ class_name IsleWorld extends Node3D
 @export var environment: IsleWorldEnvironment
 
 func _ready() -> void:
-    if Engine.is_editor_hint():
-        ITFEditorExport.register()
-        return
     if !rules:
         rules = IsleWorldRules.new()
     if !physics:

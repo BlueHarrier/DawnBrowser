@@ -1,4 +1,3 @@
-@tool
 class_name IsleExtensions extends GLTFDocumentExtension
 
 const SUPPORTED_EXTENSIONS: PackedStringArray = ["ISLE_world"]
