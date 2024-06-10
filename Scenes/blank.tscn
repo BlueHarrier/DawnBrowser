@@ -4,18 +4,18 @@
 [ext_resource type="Script" path="res://Scripts/ITF/isle_world.gd" id="1_21rr5"]
 [ext_resource type="Script" path="res://Scripts/ITF/isle_world_rules.gd" id="2_8axwr"]
 
-[sub_resource type="Resource" id="Resource_cc3n0"]
+[sub_resource type="Resource" id="Resource_8ugmj"]
 script = ExtResource("2_8axwr")
 user_gravity = Vector3(0, -9.8, 0)
-user_acceleration = 0.0
-user_deacceleration = 10.0
-user_max_velocity = 0.0
-user_jump_speed = 15.0
-user_max_fall_speed = 50.0
+user_acceleration = 30.0
+user_deacceleration = 40.0
+user_max_velocity = 4.0
+user_jump_speed = 2.5
+user_max_fall_speed = 20.0
 user_allow_velocity_scaling = true
 user_respawn_fall_distance = 30.0
 user_spawn_policy = 0
-user_spawners = [Vector3(0, 0, 0)]
+user_spawners = PackedVector3Array(0, 0, 0)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_2x1i3"]
 
@@ -29,7 +29,8 @@ script = ExtResource("1_21rr5")
 world_name = "Blank"
 author = "BlueHarrier"
 version = "1.0"
-rules = SubResource("Resource_cc3n0")
+tags = PackedStringArray()
+rules = SubResource("Resource_8ugmj")
 
 [node name="Floor" type="StaticBody3D" parent="."]
 
