@@ -3,3 +3,6 @@
 
 # Test folder
 /Test/
+
+# VSCode specific ignores
+.vscode/
