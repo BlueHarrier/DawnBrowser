@@ -44,24 +44,24 @@ var validation: Dictionary = {}
 
 ## Custom packers for specific classes
 ## This dictionary expects a class name as a key, and a Callable as a value, which will be used to pack the object into a Variant.
-## The Callable must return a non-object Variant, and will receive the object as a paremeter.
+## The Callable must return an Error, and will receive the object and an empty dictionary to fill as paremeters.
 var class_packers: Dictionary = {}
 
 ## Custom unpackers for specific classes
 ## This dictionary expects a class name as a key, and a Callable as a value, which will be used to unpack the object from a Variant.
-## The Callable must return an Object, and will receive the object as a paremeter.
+## The Callable must return an Error, and will receive the object and the dictionary as paremeters.
 var class_unpackers: Dictionary = {}
 
 ## Custom packers for specific properties
 ## This dictionary expects a class name as a key, and another Dictionary as a value, which contains a Callable for properties that may require 
 ## special packing for serialization.
-## The Callable must return a non-object Variant, and will receive the object as a paremeter.
+## The Callable must return an Error, and will receive the object and the dictionary as paremeters.
 var property_packers: Dictionary = {}
 
 ## Custom unpackers for specific properties
 ## This dictionary expects a class name as a key, and another Dictionary as a value, which contains a Callable for properties that may require
 ## special unpacking during deserialization.
-## The Callable must return a Variant, and will receive the object as a paremeter.
+## The Callable must return an Error, and will receive the object and the value as paremeters.
 var property_unpackers: Dictionary = {}
 
 ## Ignored properties for specific classes
@@ -94,9 +94,11 @@ func serialize(obj: Object, json: Dictionary) -> Error:
 ## The function will return an error if the JSON dictionary doesn't map the class, or if there was any errors with class instantiation.
 ## It will also verify any instance of the classes specified for verification.
 func deserialize(json: Dictionary, obj: Object) -> Error:
-	var properties: Dictionary = __get_object_valid_properties(obj)
 	var mapping: Dictionary = {}
 	var obj_class: String = __find_object_class(obj)
+	if class_unpackers.has(obj_class):
+		return class_unpackers[obj_class].call(obj)
+	var properties: Dictionary = __get_object_valid_properties(obj, obj_class)
 	if custom_mapping.has(obj_class):
 		mapping = custom_mapping[obj_class]
 	var unpackers: Dictionary = {}
@@ -111,7 +113,9 @@ func deserialize(json: Dictionary, obj: Object) -> Error:
 		if !properties.has(key):
 			return ERR_INVALID_DATA
 		if unpackers.has(key):
-			obj.set(key, unpackers[key].call(obj))
+			var error: Error = unpackers[key].call(obj, json[raw_key])
+			if error != OK:
+				return error
 			continue
 		var property: Dictionary = properties[key]
 		var type: int = property["type"]
@@ -184,13 +188,18 @@ func __verify_typed_array(array: Array, type: int) -> bool:
 			return false
 	return true
 
-func __get_object_valid_properties(obj: Object) -> Dictionary:
+func __get_object_valid_properties(obj: Object, obj_class: String) -> Dictionary:
 	var properties: Dictionary = {}
 	var property_list: Array = obj.get_property_list()
+	var ignore: Array = []
+	if ignored_properties.has(obj_class):
+		ignore = ignored_properties[obj_class]
 	for property: Dictionary in property_list:
+		var property_name: String = property["name"]
+		if ignore.has(property_name):
+			continue
 		var usage: int = property["usage"]
 		if usage & PROPERTY_USAGE_STORAGE:
-			var property_name: String = property["name"]
 			properties[property_name] = property
 	return properties
 
