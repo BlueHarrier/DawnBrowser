@@ -42,6 +42,33 @@ var custom_mapping: Dictionary = {}
 ## The Callable must return a boolean value, which will be used to validate the deserialized object, and will receive the object as a parameter.
 var validation: Dictionary = {}
 
+## Custom packers for specific classes
+## This dictionary expects a class name as a key, and a Callable as a value, which will be used to pack the object into a Variant.
+## The Callable must return a non-object Variant, and will receive the object as a paremeter.
+var class_packers: Dictionary = {}
+
+## Custom unpackers for specific classes
+## This dictionary expects a class name as a key, and a Callable as a value, which will be used to unpack the object from a Variant.
+## The Callable must return an Object, and will receive the object as a paremeter.
+var class_unpackers: Dictionary = {}
+
+## Custom packers for specific properties
+## This dictionary expects a class name as a key, and another Dictionary as a value, which contains a Callable for properties that may require 
+## special packing for serialization.
+## The Callable must return a non-object Variant, and will receive the object as a paremeter.
+var property_packers: Dictionary = {}
+
+## Custom unpackers for specific properties
+## This dictionary expects a class name as a key, and another Dictionary as a value, which contains a Callable for properties that may require
+## special unpacking during deserialization.
+## The Callable must return a Variant, and will receive the object as a paremeter.
+var property_unpackers: Dictionary = {}
+
+## Ignored properties for specific classes
+## This dictionary expects a class name as a key, and an Array of property names as a value, which will be ignored during serialization
+## and deserialization.
+var ignored_properties: Dictionary = {}
+
 ## Naming conventions for property remap
 enum NameMapping {
 	## `camelCase` naming convention
@@ -56,36 +83,15 @@ enum NameMapping {
 
 var _script_cache: Dictionary = {}
 
-# TODO: Make serizalitaion into an Object instead of a Variant, which returns an error.
-func serialize(value: Variant) -> Variant:
-	if value is Object:
-		var obj: Object = value as Object
-		var json: Dictionary = {}
-		var properties: Dictionary = __get_object_valid_properties(obj)
-		for property: Dictionary in properties:
-			var usage: int = property["usage"]
-			if usage & PROPERTY_USAGE_STORAGE:
-				var property_name: String = property["name"]
-				var property_value: Variant = obj.get(property_name)
-				if value != null:
-					json[__naming_to_json(property_name)] = serialize(property_value)
-		return json
-	elif value is Array:
-		var array: Array = value as Array
-		var serialized_array: Array = []
-		serialized_array.resize(array.size())
-		for i in array.size():
-			serialized_array[i] = serialize(array[i])
-		return serialized_array
-	elif value is Dictionary:
-		var dictionary: Dictionary = value as Dictionary
-		var serialized_dictionary: Dictionary = {}
-		for key: Variant in dictionary.keys():
-			serialized_dictionary[key] = serialize(dictionary[key])
-	return value
+# TODO: Serialization function
+## Serializes an Object into a JSON dictionary.
+## The expected Object must be able to use exported variables.
+func serialize(obj: Object, json: Dictionary) -> Error:
+	return OK
 
-## Deserializes a JSON dictionary into an Object, when possible.
-## The function will return an error if the JSON dictionary is not of the desired type, or if there was any errors with the class instantiation.
+## Deserializes a JSON dictionary into an Object.
+## The expected Object must be able to use exported variables, and expects the dictionary to be of the correct format.
+## The function will return an error if the JSON dictionary doesn't map the class, or if there was any errors with class instantiation.
 ## It will also verify any instance of the classes specified for verification.
 func deserialize(json: Dictionary, obj: Object) -> Error:
 	var properties: Dictionary = __get_object_valid_properties(obj)
@@ -93,6 +99,9 @@ func deserialize(json: Dictionary, obj: Object) -> Error:
 	var obj_class: String = __find_object_class(obj)
 	if custom_mapping.has(obj_class):
 		mapping = custom_mapping[obj_class]
+	var unpackers: Dictionary = {}
+	if property_unpackers.has(obj_class):
+		unpackers = property_unpackers[obj_class]
 	for raw_key: Variant in json.keys():
 		var key: String = ""
 		if mapping.has(raw_key):
@@ -101,6 +110,9 @@ func deserialize(json: Dictionary, obj: Object) -> Error:
 			key = __naming_to_godot(raw_key)
 		if !properties.has(key):
 			return ERR_INVALID_DATA
+		if unpackers.has(key):
+			obj.set(key, unpackers[key].call(obj))
+			continue
 		var property: Dictionary = properties[key]
 		var type: int = property["type"]
 		var value: Variant = json[raw_key]
@@ -129,7 +141,7 @@ func deserialize(json: Dictionary, obj: Object) -> Error:
 	return OK
 
 ## Deserializes an array of Variants into an array of desired characteristics, when possible.
-## The function will return an error if the array is not of the desired type, or if there was any errors with the class instantiation.
+## The function will return an error if the array is not of the desired type, or if there was any errors with class instantiation.
 func deserialize_array(in_array: Array, out_array: Array) -> Error:
 	var type: int = out_array.get_typed_builtin()
 	if type == TYPE_NIL:
