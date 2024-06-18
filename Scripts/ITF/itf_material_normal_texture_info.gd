@@ -1,18 +1,7 @@
-class_name ITFMaterialNormalTextureInfo extends JSONSerializable
+class_name ITFMaterialNormalTextureInfo extends Resource
 
-var index: int
-var tex_coord: int = 0
-var scale: float = 1
-var extensions: Dictionary
-var extras: Dictionary
-
-const PROPERTIES: Dictionary = {
-    "index": ["index", true, TYPE_INT, []],
-    "texCoord": ["tex_coord", false, TYPE_INT, []],
-    "scale": ["scale", false, TYPE_FLOAT, []],
-    "extensions": ["extensions", false, TYPE_DICTIONARY, []],
-    "extras": ["extras", false, TYPE_DICTIONARY, []]
-}
-
-func _get_property_map() -> Dictionary:
-    return PROPERTIES
+@export var index: int
+@export var tex_coord: int = 0
+@export var scale: float = 1
+@export var extensions: Dictionary
+@export var extras: Dictionary

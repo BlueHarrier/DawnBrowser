@@ -4,34 +4,45 @@ var path_bar: TextEdit
 var load_button: Button
 
 func _ready() -> void:
-    path_bar = $Panel/Elements/TextEdit
-    load_button = $Panel/Elements/Button
+	path_bar = $Panel/Elements/TextEdit
+	load_button = $Panel/Elements/Button
 
-    load_button.pressed.connect(on_load_button_pressed)
+	load_button.pressed.connect(on_load_button_pressed)
 
 func on_load_button_pressed() -> void:
-    var path: String = path_bar.text
-    if path == "":
-        return
-    load_button.disabled = true
-    var file: AsyncFile = AsyncFile.from_protocol(path)
-    file.bind_signals(load_gltf, load_error)
-    file.load()
+	var path: String = path_bar.text
+	if path == "":
+		return
+	load_button.disabled = true
+	var file: AsyncFile = AsyncFile.from_protocol(path)
+	file.bind_signals(load_gltf, load_error)
+	file.load()
 
 func load_gltf(path: String) -> void:
-    var itf: ITFDocument = ITFDocument.new()
-    var error: Error = itf.open(path)
-    if error != OK:
-        printerr("Error loading ITF file: " + str(error))
-        return
-    var world_scene: PackedScene = itf.get_default_world()
-    if world_scene == null:
-        printerr("No world found in ITF file")
-        return
-    var system_manager: _SystemManager = SystemManager
-    system_manager.load_world(world_scene)
-    load_button.disabled = false
+	const MAPPING: Dictionary = {
+		"ITFAccessor": {
+			"min": "accessor_min",
+			"max": "accessor_max",
+		}
+	}
+	var file_access: FileAccess = FileAccess.open(path, FileAccess.READ)
+	if file_access == null:
+		printerr("Error opening file: " + path)
+		load_button.disabled = false
+		return
+	var json_obj: JSON = JSON.new()
+	var error: Error = json_obj.parse(file_access.get_as_text())
+	if error != OK:
+		printerr("Error parsing JSON: " + str(error))
+		load_button.disabled = false
+		return
+	var json: Dictionary = json_obj.data
+	var serializer: JSONSerializer = JSONSerializer.new()
+	serializer.custom_mapping = MAPPING
+	var itf: ITF = ITF.new()
+	error = serializer.deserialize(json, itf)
+	load_button.disabled = false
 
 func load_error(error: Error) -> void:
-    printerr("Error loading file: " + str(error))
-    load_button.disabled = false
+	printerr("Error loading file: " + str(error))
+	load_button.disabled = false

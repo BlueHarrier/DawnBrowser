@@ -1,20 +1,7 @@
-class_name ITFAnimationSampler extends JSONSerializable
+class_name ITFAnimationSampler extends Resource
 
-var input: int
-var interpolation: String = "LINEAR"
-var output: int
-var extensions: Dictionary
-var extras: Dictionary
-
-const PROPERTIES: Dictionary = {
-    "input": ["input", true, TYPE_INT, []],
-    "interpolation": ["interpolation", false, TYPE_STRING, [
-        "LINEAR", "STEP", "CUBICSPLINE"
-    ]],
-    "output": ["output", true, TYPE_INT, []],
-    "extensions": ["extensions", false, TYPE_DICTIONARY, []],
-    "extras": ["extras", false, TYPE_DICTIONARY, []]
-}
-
-func _get_property_map() -> Dictionary:
-    return PROPERTIES
+@export var input: int
+@export var interpolation: String = "LINEAR"
+@export var output: int
+@export var extensions: Dictionary
+@export var extras: Dictionary

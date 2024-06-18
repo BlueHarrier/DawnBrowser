@@ -1,18 +1,7 @@
-class_name ITFMesh extends JSONSerializable
+class_name ITFMesh extends Resource
 
-var primitives: Array[ITFMeshPrimitive] = []
-var weights: PackedFloat32Array = []
-var name: String = ""
-var extensions: Dictionary
-var extras: Dictionary
-
-const PROPERTIES: Dictionary = {
-    "primitives": ["primitives", true, TYPE_ARRAY, []],
-    "weights": ["weights", false, TYPE_ARRAY, []],
-    "name": ["name", false, TYPE_STRING, []],
-    "extensions": ["extensions", false, TYPE_DICTIONARY, []],
-    "extras": ["extras", false, TYPE_DICTIONARY, []]
-}
-
-func _get_property_map() -> Dictionary:
-    return PROPERTIES
+@export var primitives: Array[ITFMeshPrimitive] = []
+@export var weights: PackedFloat32Array = []
+@export var name: String = ""
+@export var extensions: Dictionary
+@export var extras: Dictionary

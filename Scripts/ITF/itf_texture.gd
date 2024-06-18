@@ -1,18 +1,7 @@
-class_name ITFTexture extends JSONSerializable
+class_name ITFTexture extends Resource
 
-var sampler: int
-var source: int
-var name: String
-var extensions: Dictionary
-var extras: Dictionary
-
-const PROPERTIES: Dictionary = {
-    "sampler": ["sampler", false, TYPE_INT, []],
-    "source": ["source", false, TYPE_INT, []],
-    "name": ["name", false, TYPE_STRING, ""],
-    "extensions": ["extensions", false, TYPE_DICTIONARY, []],
-    "extras": ["extras", false, TYPE_DICTIONARY, []]
-}
-
-func _get_property_map() -> Dictionary:
-    return PROPERTIES
+@export var sampler: int
+@export var source: int
+@export var name: String
+@export var extensions: Dictionary
+@export var extras: Dictionary
