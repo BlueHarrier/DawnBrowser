@@ -27,10 +27,10 @@ const NAME_SNAKE_CASE: NameMapping = NameMapping.SNAKE_CASE
 const NAME_SCREAMING_SNAKE_CASE: NameMapping = NameMapping.SCREAMING_SNAKE_CASE
 
 ## Default Godot name mapping convention
-var godot_naming: NameMapping = NAME_SNAKE_CASE
+var godot_mapping: NameMapping = NAME_SNAKE_CASE
 
 ## Default Json name mapping convention
-var json_naming: NameMapping = NAME_CAMEL_CASE
+var json_mapping: NameMapping = NAME_CAMEL_CASE
 
 ## Custom name mapping for specific classes
 ## This ditionary expects a class name as a key, and another Dictionary as a value, which
@@ -252,10 +252,10 @@ func __find_object_class(obj: Object) -> String:
 	return obj.get_class()
 
 func __naming_to_godot(name: String) -> String:
-	return __map_name(name, godot_naming)
+	return __map_name(name, godot_mapping)
 
 func __naming_to_json(name: String) -> String:
-	return __map_name(name, json_naming)
+	return __map_name(name, json_mapping)
 
 func __map_name(name: String, mapping: NameMapping) -> String:
 	match mapping:
