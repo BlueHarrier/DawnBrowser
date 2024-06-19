@@ -40,30 +40,30 @@ var custom_mapping: Dictionary = {}
 
 ## Custom validation for specific classes
 ## This dictionary contains the name of each class, which requires a custom validation Callable.
-## The Callable must return a boolean value, which will be used to validate the deserialized object, and will receive the object as a parameter.
+## The Callable must have the following structure: `func validate(obj: Object) -> bool`.
 var validation: Dictionary = {}
 
 ## Custom packers for specific classes
 ## This dictionary expects a class name as a key, and a Callable as a value, which will be used to pack the object into a Variant.
-## The Callable must return an Error, and will receive the object and an empty dictionary to fill as paremeters.
+## The Callable must have the following structure: `func pack(obj: Object, json: Dictionary) -> Error`.
 var class_packers: Dictionary = {}
 
 ## Custom unpackers for specific classes
 ## This dictionary expects a class name as a key, and a Callable as a value, which will be used to unpack the object from a Variant.
-## The Callable must return an Error, and will receive the object and the dictionary as paremeters.
+## The Callable must have the following structure: `func unpack(json: Dictionary, obj: Object) -> Error`.
 var class_unpackers: Dictionary = {}
 
 ## Custom packers for specific properties
 ## This dictionary expects a class name as a key, and another Dictionary as a value, which contains a Callable for properties that may require 
 ## special packing for serialization.
-## The Callable must return an Error, and will receive the object and the dictionary as paremeters.
+## The Callable must have the following structure: `func pack(obj: Object, json: Dictionary) -> Error`.
 ## Use `$` as a key to pack properties for all classes. The entry for the specific class will override the global one.
 var property_packers: Dictionary = {}
 
 ## Custom unpackers for specific properties
 ## This dictionary expects a class name as a key, and another Dictionary as a value, which contains a Callable for properties that may require
 ## special unpacking during deserialization.
-## The Callable must return an Error, and will receive the object and the value as paremeters.
+## The Callable must have the following structure: `func unpack(json: Variant, obj: Object) -> Error`.
 ## Use `$` as a key to unpack properties for all classes. The entry for the specific class will override the global one.
 var property_unpackers: Dictionary = {}
 
@@ -107,7 +107,7 @@ func serialize(_obj: Object, _json: Dictionary) -> Error:
 func deserialize(json: Dictionary, obj: Object) -> Error:
 	var obj_class: String = __find_object_class(obj)
 	if class_unpackers.has(obj_class):
-		return class_unpackers[obj_class].call(obj)
+		return class_unpackers[obj_class].call(json, obj)
 	var properties: Dictionary = __get_object_valid_properties(obj, obj_class)
 	var mapping: Dictionary = __dic_for_class(obj_class, custom_mapping)
 	var unpackers: Dictionary = __dic_for_class(obj_class, property_unpackers)
@@ -120,7 +120,7 @@ func deserialize(json: Dictionary, obj: Object) -> Error:
 		if !properties.has(key):
 			return ERR_INVALID_DATA
 		if unpackers.has(key):
-			var error: Error = unpackers[key].call(obj, json[raw_key])
+			var error: Error = unpackers[key].call(json[raw_key], obj)
 			if error != OK:
 				return error
 			continue
