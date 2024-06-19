@@ -133,9 +133,14 @@ func deserialize(json: Dictionary, obj: Object) -> Error:
 			obj.set(key, instance)
 		elif type in ARRAY_TYPES:
 			var array: Array = value as Array
-			var error: Error = deserialize_array(array, obj.get(key))
+			var out_array: Array = obj.get(key).duplicate()
+			var error: Error = deserialize_array(array, out_array)
 			if error != OK:
 				return error
+			var obj_array: Variant = obj.get(key)
+			obj_array.resize(out_array.size())
+			for i in out_array.size():
+				obj_array[i] = out_array[i]
 		else:
 			obj.set(key, value)
 	if validation.has(obj_class):
@@ -146,7 +151,7 @@ func deserialize(json: Dictionary, obj: Object) -> Error:
 
 ## Deserializes an array of Variants into an array of desired characteristics, when possible.
 ## The function will return an error if the array is not of the desired type, or if there was any errors with class instantiation.
-func deserialize_array(in_array: Array, out_array: Array) -> Error:
+func deserialize_array(in_array: Array, out_array: Variant) -> Error:
 	var type: int = out_array.get_typed_builtin()
 	if type == TYPE_NIL:
 		out_array.assign(in_array)
