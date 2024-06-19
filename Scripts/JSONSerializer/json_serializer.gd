@@ -273,17 +273,17 @@ func __map_name(name: String, mapping: NameMapping) -> String:
 
 func __create_standard_typed_array(type: int) -> Array:
 	match type:
-		TYPE_INT:
+		TYPE_PACKED_BYTE_ARRAY, TYPE_PACKED_INT32_ARRAY, TYPE_PACKED_INT64_ARRAY:
 			return Array([], TYPE_INT, "", null)
-		TYPE_FLOAT:
+		TYPE_PACKED_FLOAT32_ARRAY, TYPE_PACKED_FLOAT64_ARRAY:
 			return Array([], TYPE_FLOAT, "", null)
-		TYPE_STRING:
+		TYPE_PACKED_STRING_ARRAY:
 			return Array([], TYPE_STRING, "", null)
-		TYPE_VECTOR2:
+		TYPE_PACKED_VECTOR2_ARRAY:
 			return Array([], TYPE_VECTOR2, "", null)
-		TYPE_VECTOR3:
+		TYPE_PACKED_VECTOR3_ARRAY:
 			return Array([], TYPE_VECTOR3, "", null)
-		TYPE_COLOR:
+		TYPE_PACKED_COLOR_ARRAY:
 			return Array([], TYPE_COLOR, "", null)
 	return Array()
 
