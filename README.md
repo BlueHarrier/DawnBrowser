@@ -2,6 +2,12 @@
 
 Testing browser for the [Isle Ecosystem project](https://github.com/BlueHarrier/IsleEcosystem).
 
+## Dependencies
+
+This project uses Godot Rust to work, don't forget to install all [Rust development tools](https://godot-rust.github.io/book/intro/index.html).
+
+Rust files can be found in `Extensions/libdawn`
+
 ## Current status
 
 - Godot's internal glTF module is optimized for its own workflow, which doesn't match glTF design philosophy. A new glTF extension is being made.
