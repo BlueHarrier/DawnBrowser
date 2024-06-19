@@ -86,7 +86,7 @@ var _script_cache: Dictionary = {}
 # TODO: Serialization function
 ## Serializes an Object into a JSON dictionary.
 ## The expected Object must be able to use exported variables.
-func serialize(obj: Object, json: Dictionary) -> Error:
+func serialize(_obj: Object, _json: Dictionary) -> Error:
 	return OK
 
 ## Deserializes a JSON dictionary into an Object.
