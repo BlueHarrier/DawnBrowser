@@ -6,7 +6,7 @@ Testing browser for the [Isle Ecosystem project](https://github.com/BlueHarrier/
 
 This project uses Godot Rust to work, don't forget to install all [Rust development tools](https://godot-rust.github.io/book/intro/index.html).
 
-Rust files can be found in `Extensions/libdawn`
+Rust files can be found in `Extensions/libdawn`.
 
 ## Current status
 
