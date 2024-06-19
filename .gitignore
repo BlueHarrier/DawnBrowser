@@ -1,5 +1,12 @@
-# Godot 4+ specific ignores
+#-- GENERAL --#
+
+.vscode/
+
+#-- GODOT --#
+
 .godot/
 
-# VSCode specific ignores
-.vscode/
+#-- RUST --#
+
+/.target/
+Cargo.lock
