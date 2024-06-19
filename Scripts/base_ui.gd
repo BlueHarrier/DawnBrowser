@@ -25,15 +25,6 @@ func load_gltf(path: String) -> void:
 			"max": "accessor_max",
 		}
 	}
-	const COMMON_IGNORES: Array = [
-		"resource_local_to_scene",
-		"resource_name",
-		"script"
-	]
-	const IGNORES: Dictionary = {
-		"ITF": COMMON_IGNORES,
-		"ITFAccessor": COMMON_IGNORES
-	}
 	var file_access: FileAccess = FileAccess.open(path, FileAccess.READ)
 	if file_access == null:
 		printerr("Error opening file: " + path)
@@ -48,7 +39,6 @@ func load_gltf(path: String) -> void:
 	var json: Dictionary = json_obj.data
 	var serializer: JSONSerializer = JSONSerializer.new()
 	serializer.custom_mapping = MAPPING
-	serializer.ignored_properties = IGNORES
 	var itf: ITF = ITF.new()
 	error = serializer.deserialize(json, itf)
 	load_button.disabled = false

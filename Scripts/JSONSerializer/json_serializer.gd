@@ -35,6 +35,7 @@ var json_mapping: NameMapping = NAME_CAMEL_CASE
 ## Custom name mapping for specific classes
 ## This ditionary expects a class name as a key, and another Dictionary as a value, which
 ## contains the custom names for each property, being the key the Json name and the value the Godot name.
+## Use `$` as a key to map properties for all classes. The entry for the specific class will override the global one.
 var custom_mapping: Dictionary = {}
 
 ## Custom validation for specific classes
@@ -56,18 +57,28 @@ var class_unpackers: Dictionary = {}
 ## This dictionary expects a class name as a key, and another Dictionary as a value, which contains a Callable for properties that may require 
 ## special packing for serialization.
 ## The Callable must return an Error, and will receive the object and the dictionary as paremeters.
+## Use `$` as a key to pack properties for all classes. The entry for the specific class will override the global one.
 var property_packers: Dictionary = {}
 
 ## Custom unpackers for specific properties
 ## This dictionary expects a class name as a key, and another Dictionary as a value, which contains a Callable for properties that may require
 ## special unpacking during deserialization.
 ## The Callable must return an Error, and will receive the object and the value as paremeters.
+## Use `$` as a key to unpack properties for all classes. The entry for the specific class will override the global one.
 var property_unpackers: Dictionary = {}
 
 ## Ignored properties for specific classes
 ## This dictionary expects a class name as a key, and an Array of property names as a value, which will be ignored during serialization
 ## and deserialization.
-var ignored_properties: Dictionary = {}
+## Use `$` as a key to ignore properties for all classes.
+## By default ignores all properties of the class `Resource`.
+var ignored_properties: Dictionary = {
+	"$": [
+		"resource_local_to_scene",
+		"resource_name",
+		"script"
+	]
+}
 
 ## Naming conventions for property remap
 enum NameMapping {
@@ -94,16 +105,12 @@ func serialize(_obj: Object, _json: Dictionary) -> Error:
 ## The function will return an error if the JSON dictionary doesn't map the class, or if there was any errors with class instantiation.
 ## It will also verify any instance of the classes specified for verification.
 func deserialize(json: Dictionary, obj: Object) -> Error:
-	var mapping: Dictionary = {}
 	var obj_class: String = __find_object_class(obj)
 	if class_unpackers.has(obj_class):
 		return class_unpackers[obj_class].call(obj)
 	var properties: Dictionary = __get_object_valid_properties(obj, obj_class)
-	if custom_mapping.has(obj_class):
-		mapping = custom_mapping[obj_class]
-	var unpackers: Dictionary = {}
-	if property_unpackers.has(obj_class):
-		unpackers = property_unpackers[obj_class]
+	var mapping: Dictionary = __dic_for_class(obj_class, custom_mapping)
+	var unpackers: Dictionary = __dic_for_class(obj_class, property_unpackers)
 	for raw_key: Variant in json.keys():
 		var key: String = ""
 		if mapping.has(raw_key):
@@ -193,9 +200,7 @@ func __verify_typed_array(array: Array, type: int) -> bool:
 func __get_object_valid_properties(obj: Object, obj_class: String) -> Dictionary:
 	var properties: Dictionary = {}
 	var property_list: Array = obj.get_property_list()
-	var ignore: Array = []
-	if ignored_properties.has(obj_class):
-		ignore = ignored_properties[obj_class]
+	var ignore: Array = __array_for_class(obj_class, ignored_properties)
 	for property: Dictionary in property_list:
 		var property_name: String = property["name"]
 		if ignore.has(property_name):
@@ -281,3 +286,19 @@ func __create_standard_typed_array(type: int) -> Array:
 		TYPE_COLOR:
 			return Array([], TYPE_COLOR, "", null)
 	return Array()
+
+func __dic_for_class(base_class: String, dic: Dictionary) -> Dictionary:
+	var output_dic: Dictionary = {}
+	if dic.has("$"):
+		output_dic.merge(dic["$"])
+	if dic.has(base_class):
+		output_dic.merge(dic[base_class], true)
+	return output_dic
+
+func __array_for_class(base_class: String, dic: Dictionary) -> Array:
+	var output_array: Array = []
+	if dic.has("$"):
+		output_array.append_array(dic["$"])
+	if dic.has(base_class):
+		output_array.append_array(dic[base_class])
+	return output_array	
