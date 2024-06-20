@@ -1,6 +1,7 @@
 #-- GENERAL --#
 
 .vscode/
+Test/
 
 #-- GODOT --#
 
@@ -8,5 +9,5 @@
 
 #-- RUST --#
 
-/.target/
+.target/
 Cargo.lock
