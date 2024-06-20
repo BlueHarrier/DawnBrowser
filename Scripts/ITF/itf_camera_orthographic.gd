@@ -6,4 +6,3 @@ class_name ITFCameraOrthographic extends Resource
 @export var znear: float
 @export var extensions: Dictionary
 @export var extras: Dictionary
-

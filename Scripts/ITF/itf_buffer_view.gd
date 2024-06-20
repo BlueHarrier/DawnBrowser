@@ -8,4 +8,3 @@ class_name ITFBufferView extends Resource
 @export var name: String
 @export var extensions: Dictionary
 @export var extras: Dictionary
-
