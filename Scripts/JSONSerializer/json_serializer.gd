@@ -94,10 +94,51 @@ enum NameMapping {
 
 var _script_cache: Dictionary = {}
 
-# TODO: Serialization function
 ## Serializes an Object into a JSON dictionary.
 ## The expected Object must be able to use exported variables.
-func serialize(_obj: Object, _json: Dictionary) -> Error:
+func serialize(obj: Object, json: Dictionary) -> Error:
+	var obj_class: String = __find_object_class(obj)
+	if class_packers.has(obj_class):
+		return class_packers[obj_class].call(obj, json)
+	var properties: Dictionary = __get_object_valid_properties(obj, obj_class)
+	var mapping: Dictionary = __invert_mapping(__dic_for_class(obj_class, custom_mapping))
+	var packers: Dictionary = __dic_for_class(obj_class, property_packers)
+	for key: String in properties.keys():
+		var property: Dictionary = properties[key]
+		var type: int = property["type"]
+		var value: Variant = obj.get(key)
+		var raw_key: String = ""
+		if mapping.has(key):
+			raw_key = mapping[key]
+		else:
+			raw_key = __naming_to_json(key)
+		if packers.has(key):
+			var error: Error = packers[key].call(obj, json)
+			if error != OK:
+				return error
+			continue
+		if type == TYPE_OBJECT:
+			var object: Dictionary = {}
+			var error: Error = serialize(value, object)
+			if error != OK:
+				return error
+			json[raw_key] = object
+		elif type in ARRAY_TYPES:
+			var array: Array = []
+			array.resize(value.size())
+			for i: int in value.size():
+				var element: Variant = value[i]
+				if typeof(element) == TYPE_OBJECT:
+					var object: Dictionary = {}
+					var error: Error = serialize(element, object)
+					if error != OK:
+						return error
+					array[i] = object
+				else:
+					array[i] = element
+			json[raw_key] = array
+		else:
+			json[raw_key] = value
 	return OK
 
 ## Deserializes a JSON dictionary into an Object.
@@ -303,3 +344,9 @@ func __array_for_class(base_class: String, dic: Dictionary) -> Array:
 	if dic.has(base_class):
 		output_array.append_array(dic[base_class])
 	return output_array	
+
+func __invert_mapping(mapping: Dictionary) -> Dictionary:
+	var inverted: Dictionary = {}
+	for key: String in mapping.keys():
+		inverted[mapping[key]] = key
+	return inverted
