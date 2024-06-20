@@ -1,5 +1,6 @@
 class_name ITFMaterial extends Resource
 
+@export var name: String
 @export var pbr_metallic_roughness: ITFMaterialPBRMetallicRoughness
 @export var normal_texture: ITFMaterialNormalTextureInfo
 @export var occlusion_texture: ITFMaterialOcclussionTextureInfo

@@ -1,6 +1,7 @@
 class_name ITF extends Resource
 
 @export var asset: ITFAsset
+@export var scene: int
 @export var scenes: Array[ITFScene] = []
 @export var nodes: Array[ITFNode] = []
 @export var meshes: Array[ITFMesh] = []
