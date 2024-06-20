@@ -140,7 +140,7 @@ func deserialize(json: Dictionary, obj: Object) -> Error:
 			obj.set(key, instance)
 		elif type in ARRAY_TYPES:
 			var array: Array = value as Array
-			var out_array: Array = __create_standard_typed_array(type)
+			var out_array: Array = __create_standard_typed_array(type, obj.get(key))
 			var error: Error = deserialize_array(array, out_array)
 			if error != OK:
 				return error
@@ -271,7 +271,7 @@ func __map_name(name: String, mapping: NameMapping) -> String:
 			return name.to_snake_case().to_upper()
 	return name
 
-func __create_standard_typed_array(type: int) -> Array:
+func __create_standard_typed_array(type: int, original_array: Array) -> Array:
 	match type:
 		TYPE_PACKED_BYTE_ARRAY, TYPE_PACKED_INT32_ARRAY, TYPE_PACKED_INT64_ARRAY:
 			return Array([], TYPE_INT, "", null)
@@ -285,7 +285,8 @@ func __create_standard_typed_array(type: int) -> Array:
 			return Array([], TYPE_VECTOR3, "", null)
 		TYPE_PACKED_COLOR_ARRAY:
 			return Array([], TYPE_COLOR, "", null)
-	return Array()
+	original_array.clear()
+	return original_array
 
 func __dic_for_class(base_class: String, dic: Dictionary) -> Dictionary:
 	var output_dic: Dictionary = {}
